@@ -4,9 +4,13 @@
 	<meta charset="UTF-8">
 	<title>Qhubeka Test</title>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<!-- Lightweight Calendar -->
 	<script src="pikaday.js"></script>
+
 	<script src="jquery-csv.js"></script>
 	<link rel="stylesheet" type="text/css" href="pikaday.css">
+	<!-- Useful Pairing tool -->
+	<script type="text/javascript" src="datepair.min.js"></script>
 	<style type="text/css">
 		html, body {
 			font-family: Helvetica, sans-serif;
@@ -29,7 +33,7 @@
 <!-- 	<input type="file" id="fileInput"/ value="Upload CSV">
 -->
 	<!-- Initialize the Widget -->
-	<p id="datepairExample">
+	<p id="datePair">
 	    <input type="text" class="date start" id="start"/>to
 	    <input type="text" class="date end" id="end"/>
 	</p>
@@ -37,22 +41,25 @@
  <div id="map"></div>
 
    <script>
-   // Widgets
+   // Random Stuff
     var map;
     var marker;
     var dataArr;
     var latLNGArrs = [];
-
-       		var pickStart = new Pikaday({field: document.getElementById('start')});
+    	//Widgets
+       	var pickStart = new Pikaday({field: document.getElementById('start')});
 		var pickEnd = new Pikaday({field: document.getElementById('end')});
-     // TODO: Create a map variable, create marker variable
-
+		//Create the pair
+		var datePair = document.getElementById("datePair");
+		var Pair = new Datepair(datePair, {
+			anchor: 'start'
+			});
     var mapOtions = {
 			center: {lat: -25.3590764, lng: 26.3690531},
 			zoom: 13
 		};
 	$("document").ready(function () {
-		$.ajax("3.csv", 
+		$.ajax("Mechanics Data/3.csv", 
 			{success: changeToCSV,type: "GET", dataType: "text"});
 	});
 
