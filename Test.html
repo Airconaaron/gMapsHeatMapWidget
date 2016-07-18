@@ -5,12 +5,19 @@
 	<title>Testing Dates</title>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	<script src="pikaday.js"></script>
+	<script src="jquery-csv.js"></script>
 	<link rel="stylesheet" type="text/css" href="pikaday.css">
 	<!-- <script type="text/javascript" src="pikaday.jquery.js"></script> -->
 	<style type="text/css">
-		body {
-		    margin: 0;
-		    padding: 1em;
+		html, body {
+			font-family: Helvetica, sans-serif;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		#map {
+			height: 100%;
+			left: 30em;
 		}
 		#datepairExample {
 			position: relative;
@@ -26,17 +33,63 @@
 	    
 	</p>
 	<input type="button" id="clickt" name="press me" title="click"/ value="Run">
-
+	<div id="map"></div>
 	<script type="text/javascript">
 	//Initialize Widgets
 		var pickStart = new Pikaday({field: document.getElementById('start')});
 		var pickEnd = new Pikaday({field: document.getElementById('end')});
+		var dataArr;
+		//Initialize the other shit
+    var map;
+    var marker;
+    var dataArr;
+    var latLNGArrs = [];
 
-		$('#clickt').on('click',function () {
-			var startString = pickStart.toString();
-			var endString = pickEnd.toString();
-			console.log(startString+endString);
+    var mapOtions = {
+			center: {lat: -25.3590764, lng: 26.3690531},
+			zoom: 13
+		};
+
+		// $('#clickt').on('click',function () {
+		// 	var startString = pickStart.toString();
+		// 	var endString = pickEnd.toString();
+		// 	console.log(startString+endString);
+		// });
+
+		$.ajax("3.csv", 
+			{success: changeToCSV,type: "GET", dataType: "text"});
+
+	function changeToCSV(data) {
+		dataArr = $.csv.toObjects(data);
+		return(dataArr)
+	};
+
+	//Main Function
+	function initMap() {
+		$('#clickt').on('click', function() {
+			
+		for (var i = 0; i < dataArr.length; i++){
+			var loc = dataArr[i].LLC;
+			var locArr = loc.split(",");
+			var latLNGArr = new google.maps.LatLng({lat: Number(locArr[0]), lng: Number(locArr[1])});
+			//var x = latLNGArr.lng;
+			//alert(x);
+			latLNGArrs.push(latLNGArr);
+		};
+			map = new google.maps.Map(document.getElementById('map'), 
+				mapOtions);
+			var heatmap = new google.maps.visualization.HeatmapLayer({
+		      data: latLNGArrs,
+		      dissipating: true,
+		      map: map
+
+		    });
+
 		});
+	};
 	</script>
+	<script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT7bLxdxvLVueoKXiPk_jHpsWjUehtn9g&v=3&libraries=geometry,visualization&callback=initMap">
+   </script>
 </body>
 </html>

@@ -3,12 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Qhubeka Test</title>
-	<!-- Date Picker -->
-	<script src="pikaday.js"></script>
-	<link rel="stylesheet" type="text/css" href="pikaday.css">
-	<!-- jQuery -->
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="pikaday.js"></script>
 	<script src="jquery-csv.js"></script>
+	<link rel="stylesheet" type="text/css" href="pikaday.css">
 	<style type="text/css">
 		html, body {
 			font-family: Helvetica, sans-serif;
@@ -29,42 +27,52 @@
 </head>
 <body>
 <!-- 	<input type="file" id="fileInput"/ value="Upload CSV">
-	<input type="button" id="clickt" name="press me" title="click"/ value="Run"> -->
+-->
 	<!-- Initialize the Widget -->
 	<p id="datepairExample">
-	    <input type="text" class="date start" />to
-	    <input type="text" class="date end" />
+	    <input type="text" class="date start" id="start"/>to
+	    <input type="text" class="date end" id="end"/>
 	</p>
-
+	<input type="button" id="clickt" name="press me" title="click"/ value="Run"> 
  <div id="map"></div>
 
    <script>
    // Widgets
-   		var pickStart = new Pikaday({field: document.getElementById('start')});
-		var pickEnd = new Pikaday({field: document.getElementById('end')});
-     // TODO: Create a map variable, create marker variable
     var map;
     var marker;
     var dataArr;
     var latLNGArrs = [];
 
+       		var pickStart = new Pikaday({field: document.getElementById('start')});
+		var pickEnd = new Pikaday({field: document.getElementById('end')});
+     // TODO: Create a map variable, create marker variable
+
     var mapOtions = {
 			center: {lat: -25.3590764, lng: 26.3690531},
 			zoom: 13
 		};
+	$("document").ready(function () {
+		$.ajax("3.csv", 
+			{success: changeToCSV,type: "GET", dataType: "text"});
+	});
+
+	function changeToCSV(data) {
+		dataArr = $.csv.toObjects(data);
+		return(dataArr)
+	};
      // TODO: Complete the following function to initialize the map
 		function initMap() {
 			$("#clickt").on('click',function(){
         //do whatever you want
-        var fileInput = document.getElementById("fileInput");
-		var file = fileInput.files[0];
+  //       var fileInput = document.getElementById("fileInput");
+		// var file = fileInput.files[0];
 
-		var reader = new FileReader();
-    	reader.readAsText(file);
-    	reader.onload = function(event) {
-		    var csv = event.target.result;
-		    dataArr = $.csv.toObjects(csv)
-		};
+		// var reader = new FileReader();
+  //   	reader.readAsText(file);
+  //   	reader.onload = function(event) {
+		//     var csv = event.target.result;
+		//     dataArr = $.csv.toObjects(csv)
+		// };
 		//alert(dataArr.length);
 		for (var i = 0; i < dataArr.length; i++){
 			var loc = dataArr[i].LLC;
