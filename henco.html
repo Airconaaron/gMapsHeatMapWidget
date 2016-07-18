@@ -10,7 +10,6 @@
 	<script src="jquery-csv.js"></script>
 	<link rel="stylesheet" type="text/css" href="pikaday.css">
 	<!-- Useful Pairing tool -->
-	<script type="text/javascript" src="datepair.min.js"></script>
 	<style type="text/css">
 		html, body {
 			font-family: Helvetica, sans-serif;
@@ -25,6 +24,9 @@
 		#datepairExample {
 			position: relative;
 
+		}
+		input {
+			margin: 1em;
 		}
 
 	</style>
@@ -47,13 +49,23 @@
     var dataArr;
     var latLNGArrs = [];
     	//Widgets
-       	var pickStart = new Pikaday({field: document.getElementById('start')});
-		var pickEnd = new Pikaday({field: document.getElementById('end')});
-		//Create the pair
-		var datePair = document.getElementById("datePair");
-		var Pair = new Datepair(datePair, {
-			anchor: 'start'
-			});
+       	var pickStart = new Pikaday({
+       		field: document.getElementById('start'), 
+       		defaultDate: null, 
+       		onSelect: function() {
+       			//Since fucking date Pair sucks ass we'll use this
+        		pickEnd.setMinDate(this.getDate());
+        		pickEnd.setDate(this.getDate());
+        	}
+        });
+		var pickEnd = new Pikaday({
+			field: document.getElementById('end'), 
+			defaultDate: null,    
+			onSelect: function() {
+        		pickStart.setMaxDate(this.getDate());
+        	}
+        });
+
     var mapOtions = {
 			center: {lat: -25.3590764, lng: 26.3690531},
 			zoom: 13
@@ -81,13 +93,26 @@
 		//     dataArr = $.csv.toObjects(csv)
 		// };
 		//alert(dataArr.length);
+		// Check that we entered in dates
+		if (pickEnd == null || pickStart == null) {
+			alert("Pick Damn Dates");
+			initMap();
+		};
+		var startDate = pickStart.getDate();
+		var endDate = pickEnd.getDate();
+
 		for (var i = 0; i < dataArr.length; i++){
+			var date = new Date(dataArr[i].Time );
+			if (date >= startDate && date <=endDate) {
 			var loc = dataArr[i].LLC;
 			var locArr = loc.split(",");
 			var latLNGArr = new google.maps.LatLng({lat: Number(locArr[0]), lng: Number(locArr[1])});
 			//var x = latLNGArr.lng;
 			//alert(x);
 			latLNGArrs.push(latLNGArr);
+			} else {
+				break;
+			};
 		};
 				    //load map and shit
 			map = new google.maps.Map(document.getElementById('map'), 
@@ -98,7 +123,8 @@
 		      map: map
 
 		    });
-
+		    //Resets this shit hopefull
+		      latLNGArrs = [];
 	 });
 
 		};
