@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Qhubeka Test</title>
+	<!-- Date Picker -->
+	<script src="pikaday.js"></script>
+	<link rel="stylesheet" type="text/css" href="pikaday.css">
+	<!-- jQuery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="jquery-csv.js"></script>
+	<style type="text/css">
+		html, body {
+			font-family: Helvetica, sans-serif;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		#map {
+			height: 100%;
+			left: 30em;
+		}
+		#datepairExample {
+			position: relative;
+
+		}
+
+	</style>
+</head>
+<body>
+<!-- 	<input type="file" id="fileInput"/ value="Upload CSV">
+	<input type="button" id="clickt" name="press me" title="click"/ value="Run"> -->
+	<!-- Initialize the Widget -->
+	<p id="datepairExample">
+	    <input type="text" class="date start" />to
+	    <input type="text" class="date end" />
+	</p>
+
+ <div id="map"></div>
+
+   <script>
+   // Widgets
+   		var pickStart = new Pikaday({field: document.getElementById('start')});
+		var pickEnd = new Pikaday({field: document.getElementById('end')});
+     // TODO: Create a map variable, create marker variable
+    var map;
+    var marker;
+    var dataArr;
+    var latLNGArrs = [];
+
+    var mapOtions = {
+			center: {lat: -25.3590764, lng: 26.3690531},
+			zoom: 13
+		};
+     // TODO: Complete the following function to initialize the map
+		function initMap() {
+			$("#clickt").on('click',function(){
+        //do whatever you want
+        var fileInput = document.getElementById("fileInput");
+		var file = fileInput.files[0];
+
+		var reader = new FileReader();
+    	reader.readAsText(file);
+    	reader.onload = function(event) {
+		    var csv = event.target.result;
+		    dataArr = $.csv.toObjects(csv)
+		};
+		//alert(dataArr.length);
+		for (var i = 0; i < dataArr.length; i++){
+			var loc = dataArr[i].LLC;
+			var locArr = loc.split(",");
+			var latLNGArr = new google.maps.LatLng({lat: Number(locArr[0]), lng: Number(locArr[1])});
+			//var x = latLNGArr.lng;
+			//alert(x);
+			latLNGArrs.push(latLNGArr);
+		};
+				    //load map and shit
+			map = new google.maps.Map(document.getElementById('map'), 
+				mapOtions);
+			var heatmap = new google.maps.visualization.HeatmapLayer({
+		      data: latLNGArrs,
+		      dissipating: true,
+		      map: map
+
+		    });
+
+	 });
+
+		};
+   </script>
+   <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
+   <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT7bLxdxvLVueoKXiPk_jHpsWjUehtn9g&v=3&libraries=geometry,visualization&callback=initMap">
+   </script>
+
+</body>
+</html>
