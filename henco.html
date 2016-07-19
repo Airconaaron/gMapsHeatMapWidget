@@ -67,11 +67,12 @@
         });
 
     var mapOtions = {
+    	//This center is over MRDP, we will recompute a better one next
 			center: {lat: -25.3590764, lng: 26.3690531},
 			zoom: 13
 		};
 	$("document").ready(function () {
-		$.ajax("Mechanics Data/3.csv", 
+		$.ajax("Mechanics Data/Data.csv", 
 			{success: changeToCSV,type: "GET", dataType: "text"});
 	});
 
@@ -100,8 +101,9 @@
 		};
 		var startDate = pickStart.getDate();
 		var endDate = pickEnd.getDate();
+		var bounds = new google.maps.LatLngBounds()
 
-		for (var i = 0; i < dataArr.length; i++){
+		for (var i = 0; i < dataArr.length; i++) {
 			var date = new Date(dataArr[i].Time );
 			if (date >= startDate && date <=endDate) {
 			var loc = dataArr[i].LLC;
@@ -110,13 +112,22 @@
 			//var x = latLNGArr.lng;
 			//alert(x);
 			latLNGArrs.push(latLNGArr);
-			} else {
-				break;
-			};
+			} //else {
+				//break; Shouldn't Break as we want it to work for all inside the range
+			//};
 		};
+		//Calculate new center using bounds
+		var newCenter;
+		for (var j = 0; j < latLNGArrs.length; j++) {
+			bounds.extend(latLNGArrs[j])
+		};
+		newCenter = bounds.getCenter();
 				    //load map and shit
-			map = new google.maps.Map(document.getElementById('map'), 
-				mapOtions);
+			map = new google.maps.Map(document.getElementById('map'), {
+				mapOtions,
+				center: newCenter
+			});
+			
 			var heatmap = new google.maps.visualization.HeatmapLayer({
 		      data: latLNGArrs,
 		      dissipating: true,
