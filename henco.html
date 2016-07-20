@@ -125,6 +125,7 @@
 				    //load map and shit
 			map = new google.maps.Map(document.getElementById('map'), 
 				mapOtions);
+			map.fitBounds(bounds);
 			var heatmap = new google.maps.visualization.HeatmapLayer({
 		      data: latLNGArrs,
 		      dissipating: true,
