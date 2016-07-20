@@ -17,16 +17,24 @@
 			margin: 0;
 			padding: 0;
 		}
-		#map {
-			height: 100%;
-			left: 20em;
-		}
-		#datepairExample {
+      #map {
+        bottom:0px;
+        height: 100%;
+        left: 20em;
+        position: absolute;
+        right: 0px;
+      }
+		#datepair {
 			position: relative;
 
 		}
 		input {
 			margin: 1em;
+		}
+		h1 {
+			margin: auto;
+			padding: 1em;
+			font: Arial, sans-serif;
 		}
 
 	</style>
@@ -36,17 +44,20 @@
 -->
 	<!-- Initialize the Widget -->
 	<p id="datePair">
+		<h1>Select Your Dates</h1>
 	    <input type="text" class="date start" id="start"/>to
 	    <input type="text" class="date end" id="end"/>
 	</p>
 	<input type="button" id="clickt" name="press me" title="click"/ value="Run"> 
- <div id="map"></div>
+ 	<div id="map"></div>
 
    <script>
    // Random Stuff
     var map;
     var marker;
     var dataArr;
+    // Distances travelled between intervals specified
+    var Distances = [];
     var latLNGArrs = [];
     	//Widgets
        	var pickStart = new Pikaday({
@@ -106,16 +117,22 @@
 			if (date >= startDate && date <=endDate) {
 			var loc = dataArr[i].LLC;
 			var locArr = loc.split(",");
+			var Distance = Number(dataArr[i].Mileage);
 			var latLNGArr = new google.maps.LatLng({lat: Number(locArr[0]), lng: Number(locArr[1])});
 			//var x = latLNGArr.lng;
 			//alert(x);
 			latLNGArrs.push(latLNGArr);
-		}
+			Distances.push(Distance);
+		};
+
 		var bounds = new google.maps.LatLngBounds();
 		var newCenter;
+
 		for (var j = 0; j < latLNGArrs.length; j++) {
 			bounds.extend(latLNGArrs[j])
 		};
+
+		//console.log(Distance);
 		newCenter = bounds.getCenter();
 		mapOtions.center = newCenter;
 			// } else {
