@@ -19,7 +19,7 @@
 		}
 		#map {
 			height: 100%;
-			left: 30em;
+			left: 20em;
 		}
 		#datepairExample {
 			position: relative;
@@ -67,7 +67,6 @@
         });
 
     var mapOtions = {
-    	//This center is over MRDP, we will recompute a better one next
 			center: {lat: -25.3590764, lng: 26.3690531},
 			zoom: 13
 		};
@@ -101,9 +100,8 @@
 		};
 		var startDate = pickStart.getDate();
 		var endDate = pickEnd.getDate();
-		var bounds = new google.maps.LatLngBounds()
 
-		for (var i = 0; i < dataArr.length; i++) {
+		for (var i = 0; i < dataArr.length; i++){
 			var date = new Date(dataArr[i].Time );
 			if (date >= startDate && date <=endDate) {
 			var loc = dataArr[i].LLC;
@@ -112,22 +110,21 @@
 			//var x = latLNGArr.lng;
 			//alert(x);
 			latLNGArrs.push(latLNGArr);
-			} //else {
-				//break; Shouldn't Break as we want it to work for all inside the range
-			//};
-		};
-		//Calculate new center using bounds
+		}
+		var bounds = new google.maps.LatLngBounds();
 		var newCenter;
 		for (var j = 0; j < latLNGArrs.length; j++) {
 			bounds.extend(latLNGArrs[j])
 		};
 		newCenter = bounds.getCenter();
+		mapOtions.center = newCenter;
+			// } else {
+			// 	break;
+			// };
+		};
 				    //load map and shit
-			map = new google.maps.Map(document.getElementById('map'), {
-				mapOtions,
-				center: newCenter
-			});
-			
+			map = new google.maps.Map(document.getElementById('map'), 
+				mapOtions);
 			var heatmap = new google.maps.visualization.HeatmapLayer({
 		      data: latLNGArrs,
 		      dissipating: true,
@@ -140,7 +137,6 @@
 
 		};
    </script>
-   <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
    <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDT7bLxdxvLVueoKXiPk_jHpsWjUehtn9g&v=3&libraries=geometry,visualization&callback=initMap">
    </script>
