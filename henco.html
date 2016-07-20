@@ -93,19 +93,8 @@
      // TODO: Complete the following function to initialize the map
 		function initMap() {
 			$("#clickt").on('click',function(){
-        //do whatever you want
-  //       var fileInput = document.getElementById("fileInput");
-		// var file = fileInput.files[0];
 
-		// var reader = new FileReader();
-  //   	reader.readAsText(file);
-  //   	reader.onload = function(event) {
-		//     var csv = event.target.result;
-		//     dataArr = $.csv.toObjects(csv)
-		// };
-		//alert(dataArr.length);
-		// Check that we entered in dates
-		if (pickEnd == null || pickStart == null) {
+		if (pickEnd.getDate() == null || pickStart.getDate() == null) {
 			alert("Pick Damn Dates");
 			initMap();
 		};
