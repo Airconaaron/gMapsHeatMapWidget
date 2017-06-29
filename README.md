@@ -5,4 +5,4 @@ Currently there is only data for summer 2016.
 
 # Sample Output
 
-![screenshot](Mechanics\ Data/Sample.jpg)
+![screenshot](https://github.com/Airconaaron/gMapsHeatMapWidget/blob/master/Mechanics%20Data/Screen%20Shot%202016-07-14%20at%2023.32.45.jpg)
